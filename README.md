@@ -37,7 +37,6 @@ Next steps: I'll inspect the plain text to understand OCR errors so I can decide
 
 - I first tried using LayoutParser’s existing NewspaperNavigator model to create bounding boxes around resident records, but it did not predict well. This is because it is not familiar with the city directory format. Fine-tuning models with LayoutParser is not straightforward (I tried following this [tutorial](https://www.youtube.com/watch?v=puOKTFXRyr4), but my training was stuck at the first iteration). So I switched to YOLO, which performs very well for the layout detection tasks we need.
 - At first, I had also labeled advertisements in my training data and trained YOLO on two classes. However, since we only care about identifying records, I realized I could try removing those labels to simplify the data. I retrained the model, and its accuracy had improved.
-- I used Cursor AI for the first time on this project, and am happy that it significantly sped up the time spent on it. It saved time with figuring out file path structures and model input/output formatting
 - I used Cursor AI for the first time on this project, and it really helped speed things up. It was especially useful for handling file paths and making sure the model inputs and outputs were formatted correctly. I look forward to using it as a tool on future projects.
 
 ## If I had more time, I would:
