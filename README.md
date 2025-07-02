@@ -2,7 +2,7 @@
 
 I developed a pipeline to extract structured resident data from scanned pages of the Minneapolis city directories (1900-1950), available via the [Hennepin County Library archive](https://box2.nmtvault.com/Hennepin2/). City directories list residents with their names, occupations, places of employment, spouses, and residences.
 
-I demonstrate my pipeline on Pages 104-108 from the [1900 Minneapolis directory](https://box2.nmtvault.com/Hennepin2/jsp/RcWebImageViewer.jsp?doc_id=7083e412-1de2-42fe-b070-7f82e5c869a4/mnmhcl00/20130429/00000008&pg_seq=112&search_doc=). This involves training a model to detect layout of the pages and extract the locations of resident listings, performing optical character recognition (OCR) on these sections, and structuring the result into json format.
+I demonstrate my pipeline on Pages 104-108 from the [1900 Minneapolis directory](https://box2.nmtvault.com/Hennepin2/jsp/RcWebImageViewer.jsp?doc_id=7083e412-1de2-42fe-b070-7f82e5c869a4/mnmhcl00/20130429/00000008&pg_seq=112&search_doc=). This involves training a model to detect layout of the pages and identify the regions containing resident listings, performing optical character recognition (OCR) on these sections, and structuring the results into json format.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/69645fd8-138f-484b-968e-7907fb2610c9" width="600"/>
