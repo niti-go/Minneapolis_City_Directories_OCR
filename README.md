@@ -1,6 +1,6 @@
 # Extracting Records from Minneapolis City Directories
 
-I developed a pipeline to extract structured resident data from scanned pages of the Minneapolis city directories (1900-1950), available via the [Hennepin County Library archive](https://box2.nmtvault.com/Hennepin2/). City directories list residents with their names, occupations, places of employment, spouses, and residences.
+I am developing a pipeline to extract structured resident data from scanned pages of the Minneapolis city directories (1900-1950), available via the [Hennepin County Library archive](https://box2.nmtvault.com/Hennepin2/). City directories list residents with their names, occupations, places of employment, spouses, and residences.
 
 I demonstrate my pipeline on Pages 104-108 from the [1900 Minneapolis directory](https://box2.nmtvault.com/Hennepin2/jsp/RcWebImageViewer.jsp?doc_id=7083e412-1de2-42fe-b070-7f82e5c869a4/mnmhcl00/20130429/00000008&pg_seq=112&search_doc=). This involves training a model to detect layout of the pages and identify the regions containing resident listings, performing optical character recognition (OCR) on these sections, and structuring the results into json format.
 
@@ -22,7 +22,7 @@ I labeled the resident records on 26 pages from the 1900 directory using LabelSt
 <img width="250" alt="image" src="https://github.com/user-attachments/assets/417e708a-9d03-4d80-96d3-4723d1ee9eba" />
 </p>
 
-I used my trained model to detect resident listings on pages 104-108, and saved the cropped regions to `tesseract_ocr/cropped_records`. It is mostly accurate, except for some instances where the bounding box extends slightly beyond the resident listings. I am confident that the accuracy would be improved with more training data.
+I used my trained model to detect resident listings on pages 104-108, and saved the cropped regions to `tesseract_ocr/cropped_records`. It is mostly accurate, except for some instances where the bounding box extends slightly beyond the region. I am confident that the accuracy would improve with more training data.
 
 <p align="center">
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/264dd693-9c16-4b07-bd33-d58bf2d42f31" />
@@ -31,13 +31,15 @@ I used my trained model to detect resident listings on pages 104-108, and saved 
 ## Running Tesseract OCR on the Detected Regions
 I applied Tesseract OCR to all the cropped images to extract the resident listings as text. I saved the results in both plain text format (`tesseract_ocr/ocr_results/combined_text.txt`) and JSON format, which contains metadata like word position.
 
-Next steps: I'll inspect the plain text to understand OCR errors so I can decide how to clean them (like fixing obvious character mistakes). Then I can use named entity recognition (NER) to structure each record, word position data from the JSON to help separate individual records.
-
 ## What I've Learned So Far
 
-- I first tried using LayoutParser’s existing NewspaperNavigator model to create bounding boxes around resident records, but it did not predict well. This is because it is not familiar with the city directory format. Fine-tuning models with LayoutParser is not straightforward (I tried following this [tutorial](https://www.youtube.com/watch?v=puOKTFXRyr4), but my training was stuck at the first iteration). So I switched to YOLO, which performs very well for the layout detection tasks we need.
-- At first, I had also labeled advertisements in my training data and trained YOLO on two classes. However, since we only care about identifying records, I realized I could try removing those labels to simplify the data. I retrained the model, and its accuracy had improved.
+- I first tried using LayoutParser’s existing NewspaperNavigator model to create bounding boxes around resident records, but it did not predict well. This is because it is not familiar with the city directory format. Fine-tuning models with LayoutParser is not straightforward (I tried following this [tutorial](https://www.youtube.com/watch?v=puOKTFXRyr4), but my training was stuck at the first iteration). So, I switched to YOLO, which integrates easier with my annotated data and performs very well for the layout detection tasks we need.
+- At first, I had also labeled advertisements in my training data and trained YOLO on two classes. However, since we only care about identifying records, I realized I could remove those labels to simplify the data. I retrained the model, and the accuracy improved.
 - I used Cursor AI for the first time on this project, and it really helped speed things up. It was especially useful for handling file paths and making sure the model inputs and outputs were formatted correctly. I look forward to using it as a tool on future projects.
+
+## Next Steps
+I'll inspect the plain text to understand OCR errors so I can decide how to clean them (like fixing obvious character mistakes). Then I can use named entity recognition (NER) to structure each record, word position data from the JSON to help separate individual records.
+
 
 ## If I had more time, I would:
 
