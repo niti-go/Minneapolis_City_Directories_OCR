@@ -16,27 +16,27 @@ This is a trial project for HouseNovel, a startup that creates interactive histo
 
 We cannot perform OCR directly on the raw page images, because inconsistent multi-column formats and advertisements would result in nonsense. So, first, I needed to detect just the resident listing areas.
 
-I labeled the resident records on 26 pages from the 1900 directory using LabelStudio, and segmented 20 pages for training and 6 for validation. I trained a YOLOv8n object detection model on this data in under 15 minutes on my CPU. The model’s mAP@50 detection accuracy is 0.995. You can find the final model weights in train_yolo/runs/detect/train/weights/best.pt. 
+I labeled the resident records on 26 pages from the 1900 directory using LabelStudio: 20 for training, 6 for validation. I trained a YOLOv8n object detection model on my CPU (in under 15 minutes!). It reached 0.995 mAP@50, which is a metric for detection accuracy. You can find the final model weights in `train_yolo/runs/detect/train/weights/best.pt`. 
 
 <p align="center">
 <img width="250" alt="image" src="https://github.com/user-attachments/assets/417e708a-9d03-4d80-96d3-4723d1ee9eba" />
 </p>
 
-I used my trained model to detect resident listings from pages 104-108, and saved the cropped regions to tesseract_ocr/cropped_records. It is mostly accurate, except for some instances where the bounding box extends slightly beyond the resident listings. I am confident that the accuracy would be improved with more training data.
+I used my trained model to detect resident listings on pages 104-108, and saved the cropped regions to `tesseract_ocr/cropped_records`. It is mostly accurate, except for some instances where the bounding box extends slightly beyond the resident listings. I am confident that the accuracy would be improved with more training data.
 
 <p align="center">
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/264dd693-9c16-4b07-bd33-d58bf2d42f31" />
 </p>
 
 ## Running Tesseract OCR on the Detected Regions
-I applied Tesseract OCR to all the cropped images to extract the resident listings as text. I saved the results in both plain text format and JSON format, which contains metadata like word position.
+I applied Tesseract OCR to all the cropped images to extract the resident listings as text. I saved the results in both plain text format (`tesseract_ocr/ocr_results/combined_text.txt`) and JSON format, which contains metadata like word position.
 
-Next steps: I plan to first inspect the plain text to understand inaccuracies in the OCR so I can decide how to preprocess the data (e.g. replacing obviously incorrect characters with probable replacements), and then use metadata like word position from the JSON data to help differentiate between individual records.
+Next steps: I'll inspect the plain text to understand OCR errors so I can decide how to clean them (like fixing obvious character mistakes). Then I can use named entity recognition (NER) to structure each record, word position data from the JSON to help separate individual records.
 
 ## Challenges Encountered
 
-- I first tried using LayoutParser’s existing NewspaperNavigator model to create bounding boxes around resident records, but it did not predict well. This is because it is not familiar with the city directory format. Fine-tuning models with LayoutParser is not straightforward (I tried following this [tutorial](https://www.youtube.com/watch?v=puOKTFXRyr4), but my training was stuck at the first iteration). So I switched to YOLO, which still works very well for the layout detection that I need.
-- Initially, I had also labeled advertisements in my training data, and trained YOLO on two classes. However, since we only care about identifying records, I realized I could try removing those labels to simplify the data. I retrained the model, and it had an improved accuracy.
+- I first tried using LayoutParser’s existing NewspaperNavigator model to create bounding boxes around resident records, but it did not predict well. This is because it is not familiar with the city directory format. Fine-tuning models with LayoutParser is not straightforward (I tried following this [tutorial](https://www.youtube.com/watch?v=puOKTFXRyr4), but my training was stuck at the first iteration). So I switched to YOLO, which performs very well for the layout detection tasks we need.
+- At first, I had also labeled advertisements in my training data and trained YOLO on two classes. However, since we only care about identifying records, I realized I could try removing those labels to simplify the data. I retrained the model, and its accuracy had improved.
 
 ## If I had more time, I would:
 
