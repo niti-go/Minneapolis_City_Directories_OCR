@@ -1,0 +1,5 @@
+train: ./annotated_training_data/images/train
+val: ./annotated_training_data/images/val
+
+nc: 1  # number of classes
+names: ["Record"]
