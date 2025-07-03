@@ -50,14 +50,25 @@ av 8."</pre></td>
 - Saving images in `.png` format with a resolution of 300 DPI is ideal clarity for Tesseract.
 - Tesseract has different modes for how it scans a page. By default, it tries to detect  blocks of text on its own, which wasn’t necessary here since I had already cropped down to just the records. So, I switched to a mode that treats everything as a single block of uniform text (called Page Segmentation Mode 6). I also tested Mode 4, which assumes rows of text are connected, since records are formatted in rows for the most part.
 
-## What I've Learned So Far
+
+## Challenges Faced
+Tesseract was rarely able to identify ditto marks (") at the beginning of a record, which is very important to tell us that an individual's last name is connected to a previous record.
+
+I initially thought the denoising steps might be causing the ditto marks to disappear, but after inspecting the post-processed images, they are still very clear. I think it's caused by Tesseract's internal logic that removing whitespace in the beginnings of lines.
+
+However, training a separate object-detection model to recognize ditto marks worked very well.
+
+<p align="center">
+<img width="250" alt="image" src="https://github.com/user-attachments/assets/afac0c8f-31ab-46b3-996a-88157c2cbc8e" />
+</p>
+
+An idea I have is to separately detect the line positions that contain ditto marks, and then insert them into the post-OCR'd text.
+
+## Additional Notes
 
 - I first tried using LayoutParser’s existing NewspaperNavigator model to create bounding boxes around resident records, but it did not predict well. This is because it is not familiar with the city directory format. Fine-tuning models with LayoutParser is not straightforward (I tried following this [tutorial](https://www.youtube.com/watch?v=puOKTFXRyr4), but my training was stuck at the first iteration). So, I switched to YOLO, which integrates easier with my annotated data and performs very well for the layout detection tasks we need.
 - At first, I had also labeled advertisements in my training data and trained YOLO on two classes. However, since we only care about identifying records, I realized I could remove those labels to simplify the data. I retrained the model, and the accuracy improved.
-- I used Cursor AI for the first time on this project, and it really helped speed things up. It was especially useful for handling file paths and making sure the model inputs and outputs were formatted correctly. I look forward to using it as a tool on future projects.
-
-## Next Steps
-I'll inspect the plain text to understand OCR errors so I can decide how to clean them (like fixing obvious character mistakes). Then I can use named entity recognition (NER) to structure each record, word position data from the JSON to help separate individual records.
+- I used Cursor AI for the first time on this project, and it really helped speed things up. It was especially useful for handling file paths and making sure the model inputs and outputs were formatted correctly. I look forward to using it as a tool on future projects (validating its output with other sources, of course).
 
 
 ## If I had more time, I would:
