@@ -2,7 +2,7 @@
 
 I am developing a pipeline to extract structured resident data from scanned pages of the Minneapolis city directories (1900-1950), available via the [Hennepin County Library archive](https://box2.nmtvault.com/Hennepin2/). City directories list residents with their names, occupations, places of employment, spouses, and residences.
 
-I demonstrate my pipeline on Pages 104-108 from the [1900 Minneapolis directory](https://box2.nmtvault.com/Hennepin2/jsp/RcWebImageViewer.jsp?doc_id=7083e412-1de2-42fe-b070-7f82e5c869a4/mnmhcl00/20130429/00000008&pg_seq=112&search_doc=). This involves training a model to detect layout of the pages and identify the regions containing resident listings, performing optical character recognition (OCR) on these sections, and structuring the results into json format.
+I tested my process on Pages 104-108 from the [1900 Minneapolis directory](https://box2.nmtvault.com/Hennepin2/jsp/RcWebImageViewer.jsp?doc_id=7083e412-1de2-42fe-b070-7f82e5c869a4/mnmhcl00/20130429/00000008&pg_seq=112&search_doc=). This involves training a model to detect the parts of the page that list resident information, running optical character recognition (OCR) on these sections, and structuring the results as JSON.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/69645fd8-138f-484b-968e-7907fb2610c9" width="600"/>
@@ -10,7 +10,7 @@ I demonstrate my pipeline on Pages 104-108 from the [1900 Minneapolis directory]
 
 ## Why I built this project
 
-This is a trial project for HouseNovel, a startup that creates interactive historical house timelines. I gained experience with OCR on scanned documents, layout detection by training object-detection models, data annotation with LabelStudio, and structuring messy data into clean JSON.
+This is a trial project for HouseNovel, a startup that creates historical timelines for homes. I learned a lot about image processing and improving OCR results, layout detection by training object-detection models, data annotation with LabelStudio, and structuring messy data.
 
 ## How I Trained an Object Detection Model
 
@@ -22,14 +22,33 @@ I labeled the resident records on 26 pages from the 1900 directory using LabelSt
 <img width="250" alt="image" src="https://github.com/user-attachments/assets/417e708a-9d03-4d80-96d3-4723d1ee9eba" />
 </p>
 
-I used my trained model to detect resident listings on pages 104-108, and saved the cropped regions to `tesseract_ocr/cropped_records`. It is mostly accurate, except for some instances where the bounding box extends slightly beyond the region. I am confident that the accuracy would improve with more training data.
+I used my trained model to detect the resident listings from pages 104-108, and saved the cropped sections to `tesseract_ocr/cropped_records`. It is mostly accurate, except for one case where the bounding box extends slightly too far. I am confident that with more training data, the accuracy would improve.
 
 <p align="center">
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/264dd693-9c16-4b07-bd33-d58bf2d42f31" />
 </p>
 
 ## Running Tesseract OCR on the Detected Regions
-I applied Tesseract OCR to all the cropped images to extract the resident listings as text. I saved the results in both plain text format (`tesseract_ocr/ocr_results/combined_text.txt`) and JSON format, which contains metadata like word position.
+I applied Tesseract OCR to the cropped images to extract the resident listings as text. I saved the results in two formats: plain text (`tesseract_ocr/ocr_results/combined_text.txt`) and JSON, which includes extra metadata like word position.
+
+At first, using Tesseract with default settings gave very messy results. Then I realized the importance of image preprocessing and OCR configurations. These helped greatly improve the quality of OCR output.
+
+<table>
+  <tr>
+    <td><pre>"os musa pete r (wid oe H), vr 3107 2d
+Bltzabeth Wi "</pre></td>
+    <td><pre>---></pre></td>
+    <td><pre>"Elizabeth J (wid Andrew H), r 3107 2d
+av 8."</pre></td>
+  </tr>
+</table>
+
+**Some things I discovered:**
+
+- Image filtering techniques like median blurring can reduce noise from the image, so random dots and smudges don't confuse the OCR tool.
+- Since I knew the directories only contain regular letters, numbers, and common punctuation (like periods or commas), I gave Tesseract a whitelist of allowed characters. This stops it from trying to read odd symbols like © or ¢ that don’t belong in the text.
+- Saving images in `.png` format with a resolution of 300 DPI is ideal clarity for Tesseract.
+- Tesseract has different modes for how it scans a page. By default, it tries to detect  blocks of text on its own, which wasn’t necessary here since I had already cropped down to just the records. So, I switched to a mode that treats everything as a single block of uniform text (called Page Segmentation Mode 6). I also tested Mode 4, which assumes rows of text are connected, since records are formatted in rows for the most part.
 
 ## What I've Learned So Far
 
