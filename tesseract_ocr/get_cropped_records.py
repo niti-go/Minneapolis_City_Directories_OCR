@@ -1,6 +1,6 @@
 import os
 import cv2
-
+from PIL import Image
 #After the yolo model has been trained and the predictions have been made on the test set (pages 104-108), 
 #I use this script to crop the full pages down to the identified record sections
 #Creates the folder cropped_records in the tesseract_ocr directory
@@ -53,11 +53,21 @@ for label_file in os.listdir(label_dir):
         # Ensure coordinates are within image bounds
         x1, y1 = max(0, x1), max(0, y1)
         x2, y2 = min(w, x2), min(h, y2)
+        
+        # Add 10 pixels to the bottom of the bounding box
+        #(Some images were otherwise slightly cut off)
+        y2 = min(h, y2 + 10)
+        
         # Crop and save
         crop = img[y1:y2, x1:x2]
         crop_filename = f"{base_name}_crop_{i}.png"
-        cv2.imwrite(os.path.join(output_dir, crop_filename), crop)
-        print(f"Saved {crop_filename}")
+        output_path = os.path.join(output_dir, crop_filename)
+
+        # Ensure image is saved at 300 DPI
+        crop_rgb = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+        pil_image = Image.fromarray(crop_rgb)
+        pil_image.save(output_path, dpi=(300, 300))
+        print(f"Saved {crop_filename} at 300 DPI")
 
 print("Cropping full pages down to record sections is complete!")
 print("Saved cropped records in the cropped_records folder")

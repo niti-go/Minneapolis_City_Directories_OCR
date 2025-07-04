@@ -1,0 +1,98 @@
+"
+acct
+adv
+agt
+appr
+assn
+asst
+av
+b
+bartndr
+bet
+bkbndr
+bkpr
+blksmth
+bldg
+blk
+boul
+cabtmkr
+carp
+civ eng
+clk
+clnr
+collr
+commr
+comm
+comp
+cond
+conft
+contr
+cor
+ct
+dep
+dept
+dom
+e
+elev
+eng
+engr
+exp
+e s
+frt
+gen
+ins
+inspt
+lab
+mach
+mech
+mesgr
+mkr
+mfr
+mngr
+n
+nr
+n e
+n s
+n w
+opp
+opr
+photogr
+phys
+pk
+pkr
+pl
+P O
+pres
+prin
+prof
+propr
+pub
+r
+rd
+real est
+repr
+ret
+R M S
+rms
+Rev
+s
+s e
+s s
+s w
+slsmn
+smstrs
+solr
+stenogr
+supt
+tchr
+tel
+tmstr
+tndr
+trav
+upholstr
+vet surg
+w
+Washn
+whol
+wid
+w s
