@@ -10,7 +10,7 @@ I tested my process on Pages 104-108 from the [1900 Minneapolis directory](https
 
 ## Why I built this project
 
-This is a trial project for HouseNovel, a startup that creates historical timelines for homes. I learned a lot about image processing and improving OCR results, layout detection by training object-detection models, data annotation with LabelStudio, and structuring messy data.
+This is a trial project. I learned a lot about image processing and improving OCR results, layout detection by training object-detection models, data annotation with LabelStudio, and structuring messy data.
 
 ## How I Trained an Object Detection Model
 
