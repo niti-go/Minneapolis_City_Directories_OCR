@@ -6,6 +6,8 @@ I tested my process on Pages 104-108 from the [1900 Minneapolis directory](https
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/69645fd8-138f-484b-968e-7907fb2610c9" width="600"/>
+<br>
+  <em>My process to structure Minneapolis 1900 city directory data.</em>
 </p>
 
 ## Why I built this project
@@ -20,12 +22,16 @@ I labeled the resident records on 26 pages from the 1900 directory using LabelSt
 
 <p align="center">
 <img width="250" alt="image" src="https://github.com/user-attachments/assets/417e708a-9d03-4d80-96d3-4723d1ee9eba" />
+  <br>
+  <em>A page I annotated for the training data.</em>
 </p>
 
-I used my trained model to detect the resident listings from pages 104-108, and saved the cropped sections to `tesseract_ocr/cropped_records`. It is mostly accurate, except for one case where the bounding box extends slightly too far. I am confident that with more training data, the accuracy would improve.
+I used my trained model to detect the resident listings from unseen pages 104-108, and saved the cropped sections to `tesseract_ocr/cropped_records`. It is mostly accurate, except for one case where the bounding box extends slightly too far. I am confident that with more training data, the accuracy would improve.
 
 <p align="center">
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/264dd693-9c16-4b07-bd33-d58bf2d42f31" />
+<br>
+<em>The trained model detecting resident listings on pages 104 and 105.</em>
 </p>
 
 ## Running Tesseract OCR on the Detected Regions
@@ -33,7 +39,7 @@ I applied Tesseract OCR to the cropped images to extract the resident listings a
 
 At first, using Tesseract with default settings gave very messy results. Then I realized the importance of image preprocessing and OCR configurations. These helped greatly improve the quality of OCR output.
 
-<table>
+<table align="center">
   <tr>
     <td><pre>"os musa pete r (wid oe H), vr 3107 2d
 Bltzabeth Wi "</pre></td>
@@ -42,8 +48,11 @@ Bltzabeth Wi "</pre></td>
 av 8."</pre></td>
   </tr>
 </table>
+<p align="center">
+<em>Improvement in OCR output.</em>
+</p>
 
-**Some things I discovered:**
+**Some tricks I discovered:**
 
 - Image filtering techniques like median blurring can reduce noise from the image, so random dots and smudges don't confuse the OCR tool.
 - Since I knew the directories only contain regular letters, numbers, and common punctuation (like periods or commas), I gave Tesseract a whitelist of allowed characters. This stops it from trying to read odd symbols like © or ¢ that don’t belong in the text.
@@ -60,9 +69,11 @@ However, training a separate object-detection model to recognize ditto marks wor
 
 <p align="center">
 <img width="250" alt="image" src="https://github.com/user-attachments/assets/afac0c8f-31ab-46b3-996a-88157c2cbc8e" />
+  <br>
+  <em>A separate model is able to identify ditto marks.</em>
 </p>
 
-An idea I have is to separately detect the line positions that contain ditto marks, and then insert them into the post-OCR'd text.
+An idea I have is to separately identify which lines contain ditto marks using the new model, and correspondingly insert them into the post-OCR'd text.
 
 ## Additional Notes
 
