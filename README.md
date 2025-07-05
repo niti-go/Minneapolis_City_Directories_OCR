@@ -70,10 +70,42 @@ However, training a separate object-detection model to recognize ditto marks wor
 <p align="center">
 <img width="250" alt="image" src="https://github.com/user-attachments/assets/afac0c8f-31ab-46b3-996a-88157c2cbc8e" />
   <br>
-  <em>A separate model is able to identify ditto marks.</em>
+  <em>A separate OpenCV model is able to identify ditto marks.</em>
 </p>
 
-An idea I have is to separately identify which lines contain ditto marks using the new model, and correspondingly insert them into the post-OCR'd text.
+An idea I have is to separately identify which lines contain ditto marks using the new model, and correspondingly insert them into the post-OCR'd text based on their y-position.
+
+## Next Steps
+Due to time constraints, I still need to finish the following tasks:
+
+Once the OCR text is more accurate by inserting ditto marks, we need to distinguish between individual records, which can be one or multiple lines long.
+
+<table align="center">
+  <tr>
+    <td><pre>Belle W (wid George), b 2430 lith av s.
+Charles, tinner F T Thompson, r 2422
+Central av.
+David, mach opr H C Akeley Lbr Co,
+r 605. 2lst av n.
+Brick, tmstr, r 827 29th av s.
+Frank, lab, rms 204 Hennepin. av.</pre></td>
+    <td><pre>---></pre></td>
+    <td><pre>Belle W (wid George), b 2430 lith av s.<hr>Charles, tinner F T Thompson, r 2422
+Central av.<hr>David, mach opr H C Akeley Lbr Co,
+r 605. 2lst av n.<hr>Brick, tmstr, r 827 29th av s.<hr>Frank, lab, rms 204 Hennepin. av.</pre></td>
+  </tr>
+</table>
+<p align="center">
+<em>Separating text into individual records.</em>
+</p>
+
+Since I have the JSON output, which also contains word position, I would modify the text file to indicate whether each line is indented or not. Indented lines are typically a continuation of the record on the previous line.
+
+(For more specifics: I would create a data point for each first word in a line. I would use K-means clustering with 2 means on the x-position of the points. Since all lines start with either an indent or not, one mean would be the x-position of indented lines, and one mean would be the x-position of non-indented lines.)
+
+Also, I can use the fact that lines starting with a lowercase are usually a continutation of the previous line.
+
+Next, I would need to identify different fields within a record. Commas can help in separating some fields, and I can use NER to improve confidence in the "name" and "spouse" fields. Addresses are usually numbers and end in an abbreviation like "av" or "s". Also, a page in the 1900 directory contains a dictionary of abbreviations ("rms" = "rooms", "b" = "boards", "smstrs" = "seamstress"), which can help with identifying occupation and residence type.
 
 ## Additional Notes
 
