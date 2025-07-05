@@ -99,13 +99,13 @@ r 605. 2lst av n.<hr>Brick, tmstr, r 827 29th av s.<hr>Frank, lab, rms 204 Henne
 <em>Separating text into individual records.</em>
 </p>
 
-Since I have the JSON output, which also contains word position, I would modify the text file to indicate whether each line is indented or not. Indented lines are typically a continuation of the record on the previous line.
+I noticed that indented lines are typically a continuation of the record on the previous line, while non-indented lines mark the beginning of a new entry. Since I have the JSON output, which also contains word position, I would modify the text file to indicate whether each line is indented or not. 
 
-(For more specifics: I would create a data point for each first word in a line. I would use K-means clustering with 2 means on the x-position of the points. Since all lines start with either an indent or not, one mean would be the x-position of indented lines, and one mean would be the x-position of non-indented lines.)
+To identify the indents, I would create a data point for each first word in a line. I would run a means-clustering aalgorithm with 2 means on the x-position of the points. Since all lines start with either an indent or not, one mean would be the x-position of indented lines, and one mean would be the x-position of non-indented lines.
 
 Also, I can use the fact that lines starting with a lowercase are usually a continutation of the previous line.
 
-Next, I would need to identify different fields within a record. Commas can help in separating some fields, and I can use NER to improve confidence in the "name" and "spouse" fields. Addresses are usually numbers and end in an abbreviation like "av" or "s". Also, a page in the 1900 directory contains a dictionary of abbreviations ("rms" = "rooms", "b" = "boards", "smstrs" = "seamstress"), which can help with identifying occupation and residence type.
+Next, I would need to identify different fields within a record. Commas can help in separating some fields, and I can use NER to improve confidence in the the name and spouse fields. Addresses are usually numbers and end in an abbreviation like "av" or "s". Also, a page in the 1900 directory contains a dictionary of abbreviations (e.g. "b" = "boards", "smstrs" = "seamstress"), which can help with identifying occupation and residence type. If the line contains a ditto mark, the last name is copied from the previous record. 
 
 ## Additional Notes
 
