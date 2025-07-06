@@ -110,7 +110,7 @@ Next, I would need to identify different fields within a record. Commas can help
 # Phase Two: Real World Application - 1807 Dupont Ave S
 The goal is to create a timeline of past residents between 1902 and 1950 at 1807 Dupont Ave S, Minneapolis, MN 55403.
 
-After following the steps above, each year from 1900 to 1950 would contain JSON data of residents. From [Zillow] (https://www.zillow.com/homedetails/1807-Dupont-Ave-S-Minneapolis-MN-55403/1951320_zpid), we see that the home was built in 1902, so we can start from 1902 and iterate over each year, searching for records where the address matches and keeping track of the names of any people who live there. If the name is the same over multiple years, I would record in the timeline that that person lived there for those years.
+After following the steps above, each year from 1900 to 1950 would contain JSON data of residents. From [Zillow](https://www.zillow.com/homedetails/1807-Dupont-Ave-S-Minneapolis-MN-55403/1951320_zpid), we see that the home was built in 1902, so we can start from 1902 and iterate over each year, searching for records where the address matches and keeping track of the names of any people who live there. If the name is the same over multiple years, I would record in the timeline that that person lived there for those years.
 
 It's possible that names change slightly in the data from year to year, for example, from spouse changes or OCR errors. If most other fields match, then we can assume it's the same person living in the home.
 
