@@ -45,7 +45,7 @@ At first, using Tesseract with default settings gave very messy results. Then I 
     <td><pre>"os musa pete r (wid oe H), vr 3107 2d
 Bltzabeth Wi "</pre></td>
     <td><pre>---></pre></td>
-    <td><pre>"Elizabeth J (wid Andrew H), r 3107 2d
+    <td><pre>"Blizabeth J (wid Andrew H), r 3107 2d
 av 8."</pre></td>
   </tr>
 </table>
